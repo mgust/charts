@@ -13,10 +13,15 @@ imagePullPolicy: IfNotPresent
 ## Replicas Set count
 replicasCount: 1
 
+## Set the name of the GCP service account key secret
+## If left empty, will default to fullname
+serviceAccountSecret: ""
+
 ## Set the GCP service account key JSON file.
 ## Service account has access be set to Cloud SQL instances
 ## the key must be encoded with base64
 ## e.g. `cat service-account.json | base64`
+## If this is left empty, the secret is assumed to already exist.
 ##
 serviceAccountKey: ""
 

@@ -1,12 +1,22 @@
 ** Please be patient while the chart is being deployed **
 
 {{- if not .Values.serviceAccountKey }}
+{{- if not .Values.serviceAccountSecret }}
 ##############################################################################
-####   ERROR: You did not provide Google Cloud Service Account key.       ####
+####   ERROR: You did not provide Google Cloud Service Account key.     ####
 ##############################################################################
 
 All pods do not go to the running state if the GCP Service Account key was not provided.
 
+{{- else }}
+##############################################################################
+####   WARNING: You did not provide Google Cloud Service Account key.     ####
+##############################################################################
+
+Unless you already provisioned the Kubernetes secret {{ .Values.serviceAccountSecret }} manually,
+all pods do not go to the running state if the GCP Service Account key was not provided.
+
+{{- end }}
 {{- end }}
 
 {{- if eq (index .Values.cloudsql.instances 0).instance "instance" }}
@@ -20,7 +30,7 @@ settings were not provided.
 
 {{- end }}
 
-{{- if and .Values.serviceAccountKey (ne (index .Values.cloudsql.instances 0).instance "instance") }}
+{{- if and (or .Values.serviceAccountKey .Values.serviceAccountSecret) (ne (index .Values.cloudsql.instances 0).instance "instance") }}
 
 The SQL server instances can be accessed via ports:
 {{- range .Values.cloudsql.instances }}

@@ -10,10 +10,10 @@ metadata:
 spec:
   ports:
   {{- range .Values.cloudsql.instances }}
-  - name: {{ .instance }}
+  - name: {{ .instance | trunc 15 }}
     protocol: TCP
     port: {{ .port }}
-    targetPort: {{ .instance }}
+    targetPort: {{ .instance | trunc 15 }}
   {{- end }}
   selector:
     app: {{ template "gcloud-sqlproxy.fullname" . }}

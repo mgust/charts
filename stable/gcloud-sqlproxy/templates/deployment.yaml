@@ -1,4 +1,4 @@
-{{- if and .Values.serviceAccountKey (ne (index .Values.cloudsql.instances 0).instance "instance") }}
+{{- if ne (index .Values.cloudsql.instances 0).instance "instance" }}
 apiVersion: extensions/v1beta1
 kind: Deployment
 metadata:
@@ -28,7 +28,7 @@ spec:
                   "-credential_file=/secrets/cloudsql/credentials.json"]
         ports:
         {{- range .Values.cloudsql.instances }}
-        - name: {{ .instance }}
+        - name: {{ .instance | trunc 15 }}
           containerPort: {{ .port }}
         {{- end }}
         volumeMounts:
@@ -39,7 +39,7 @@ spec:
       volumes:
       - name: cloudsql-oauth-credentials
         secret:
-          secretName: {{ template "gcloud-sqlproxy.fullname" . }}
+          secretName: {{ template "gcloud-sqlproxy.secretName" . }}
       - name: cloudsql
         emptyDir: {}
       nodeSelector:

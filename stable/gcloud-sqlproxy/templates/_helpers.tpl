@@ -18,3 +18,14 @@ We truncate at 63 chars because some Kubernetes name fields are limited to this 
 {{- printf "%s-%s" .Release.Name $name | trunc 63 | trimSuffix "-" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Allow for override of the secret name.
+*/}}
+{{- define "gcloud-sqlproxy.secretName" -}}
+{{- if .Values.serviceAccountSecret -}}
+{{- printf "%s" .Values.serviceAccountSecret -}}
+{{- else -}}
+{{- template "gcloud-sqlproxy.fullname" . -}}
+{{- end -}}
+{{- end -}}
